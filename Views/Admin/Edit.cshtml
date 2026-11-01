@@ -1,0 +1,28 @@
+@model WebNgheNhac.Models.Song
+@{
+    ViewData["Title"] = "Sửa bài hát";
+}
+
+<div class="app-container" style="display: flex; justify-content: center; align-items: center;">
+    <div class="auth-card" style="width: 100%; max-width: 500px; margin-top: 20px;">
+        <h2 style="text-align: center; margin-bottom: 24px;">Sửa bài hát #@Model.Id</h2>
+        
+        <form method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label>Tên bài hát</label>
+                <input type="text" name="title" value="@Model.Title" required />
+            </div>
+            <div class="form-group">
+                <label>Ca sĩ / Nghệ sĩ</label>
+                <input type="text" name="artist" value="@Model.Artist" required />
+            </div>
+            <div class="form-group">
+                <label>File nhạc (Bỏ trống nếu không muốn đổi)</label>
+                <input type="file" name="musicFile" accept=".mp3,.wav" style="padding: 10px; background: #282828; color: #fff; border: 1px solid #3e3e3e; border-radius: 4px;" />
+                <small style="color: #1DB954; display: block; margin-top: 8px;">File hiện tại: @Model.FilePath</small>
+            </div>
+            <button type="submit" class="auth-btn" style="margin-top: 20px;"><i class="fas fa-save"></i> Cập nhật</button>
+            <a href="/Admin" style="display: block; text-align: center; margin-top: 16px; color: #b3b3b3; text-decoration: none;">Hủy</a>
+        </form>
+    </div>
+</div>

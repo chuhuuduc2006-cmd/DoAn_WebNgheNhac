@@ -1,0 +1,65 @@
+@{
+    ViewData["Title"] = "Tìm kiếm";
+}
+
+<div class="app-container">
+    <aside class="sidebar">
+        <div class="logo"><i class="fas fa-music"></i><span>WebNgheNhac</span></div>
+        <nav class="menu">
+            <a href="/" class="menu-item"><i class="fas fa-home"></i> Trang chủ</a>
+            <a href="/Playlist" class="menu-item"><i class="fas fa-book"></i> Playlist</a>
+            <a href="/Search" class="menu-item active"><i class="fas fa-search"></i> Tìm kiếm</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <section class="greeting-banner">
+            <h1>Tìm kiếm 🎵</h1>
+            <p>Tìm bài hát trên Spotify</p>
+        </section>
+
+        <div class="search-box">
+            <input type="text" id="search-input" placeholder="Nhập tên bài hát, ca sĩ..." />
+            <button id="search-btn"><i class="fas fa-search"></i> Tìm</button>
+        </div>
+
+        <div id="search-results" class="songs-grid"></div>
+    </main>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('search-btn').addEventListener('click', async function() {
+            const query = document.getElementById('search-input').value;
+            const resultsDiv = document.getElementById('search-results');
+            if (!query) return;
+            
+            resultsDiv.innerHTML = '<p style="color:#b3b3b3">Đang tìm kiếm...</p>';
+            try {
+                const response = await fetch(`/Search/Search?query=${encodeURIComponent(query)}`);
+                const data = await response.json();
+                if (!data.success) {
+                    resultsDiv.innerHTML = `<p style="color:#ff6b6b">${data.message}</p>`;
+                    return;
+                }
+                if (data.data.length === 0) {
+                    resultsDiv.innerHTML = '<p style="color:#b3b3b3">Không tìm thấy bài hát nào.</p>';
+                    return;
+                }
+                resultsDiv.innerHTML = data.data.map(song => `
+                    <div class="song-card">
+                        <div class="card-image">
+                            <img src="${song.image}" alt="${song.title}" />
+                        </div>
+                        <div class="card-info">
+                            <h3 class="card-title">${song.title}</h3>
+                            <p class="card-artist">${song.artist}</p>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (err) {
+                resultsDiv.innerHTML = `<p style="color:#ff6b6b">Lỗi: ${err.message}</p>`;
+            }
+        });
+    </script>
+}
